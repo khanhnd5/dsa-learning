@@ -6,8 +6,9 @@ using namespace std;
 int pivot(int left, int right, vector<int>& v) {
     int count = 0;
     int pivotIndex = left;
-    for(int i = left; i <= right; i++) {
-        if(v[i] < v[pivotIndex]) count++;
+
+    for(int i = left + 1; i <= right; i++) {
+        if(v[i] <= v[pivotIndex]) count++;
     }
 
     pivotIndex += count;
@@ -18,9 +19,13 @@ int pivot(int left, int right, vector<int>& v) {
     int j = right;
     
     while(i < pivotIndex && j > pivotIndex) {
-        while(v[i] < v[pivotIndex]) i++;
-        while(v[j] > v[pivotIndex]) j--;
-        if(i < pivotIndex && j > pivotIndex) swap(v[i], v[j]);
+        while(i < pivotIndex && v[i] <= v[pivotIndex]) i++;
+        while(j > pivotIndex && v[j] > v[pivotIndex]) j--;
+        if(i < pivotIndex && j > pivotIndex) {
+            swap(v[i], v[j]);
+            i++;
+            j--;
+        }
     }
 
     return pivotIndex;
@@ -29,12 +34,12 @@ int pivot(int left, int right, vector<int>& v) {
 void quickSort(int left, int right, vector<int>& v) {
     if(left >= right) return;
     int pivotIndex = pivot(left, right, v);
-    if(pivotIndex > left) quickSort(left, pivotIndex - 1, v);
-    if(pivotIndex < right) quickSort(pivotIndex + 1, right, v);
+    quickSort(left, pivotIndex - 1, v);
+    quickSort(pivotIndex + 1, right, v);
 }
 
 int main() {
-    vector<int> v {100, 20, 25, 1, 8, 30, 0, -5, -12, 40};
+    vector<int> v {100, 100, 100, 1, 8, 30, 100, -5, -12, 40};
 
     quickSort(0, v.size() - 1, v);
 
